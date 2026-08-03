@@ -216,8 +216,7 @@ private fun RelationDropdown(selected: String, onSelect: (String) -> Unit) {
             readOnly = true,
             label = { Text("صلة القرابة") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-        )
+            modifier = Modifier.menuAnchor()
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
     RelationOptions.all.forEach { option ->
                 DropdownMenuItem(
