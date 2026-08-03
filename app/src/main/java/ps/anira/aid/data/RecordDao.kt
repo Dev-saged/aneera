@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RecordDao {
 
-    @Insert(onConflictStrategy = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(record: BeneficiaryRecord): Long
 
     /**
@@ -21,7 +21,7 @@ interface RecordDao {
      * الاختبار الـ16 التي تحقّقنا منها على نسخة الويب — يجب إعادة نفس الاختبارات
      * هنا (JUnit) قبل الاعتماد على هذا الجزء بالحقل، لا تخمين.
      */
-    @Insert(onConflictStrategy = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(records: List<BeneficiaryRecord>): List<Long>
 
     @Query("SELECT * FROM records WHERE monthKey = :monthKey ORDER BY ts DESC")
