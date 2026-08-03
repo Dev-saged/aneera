@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      صلاحية واحدة فقط: INTERNET.
+      مطلوبة حصراً لرفع النسخة الاحتياطية عبر Telegram Bot API (نفس نطاق استخدام
+      الشبكة بالضبط الموجود بنسخة الويب — لا استخدام إنترنت آخر بالتطبيق).
+      لا صلاحية تخزين خارجي: قاعدة Room تعيش بمساحة التطبيق الخاصة (app-private
+      storage) ولا تحتاج أي إذن على أندرويد الحديث.
+      لا كاميرا/جهات اتصال/موقع: غير مستخدَمة حالياً في منطق العمل.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Anira">
+
+        <!--
+          allowBackup="false" عن قصد: بيانات هوية وطنية حساسة — لا نريدها
+          تُنسَخ تلقائياً لحساب جوجل السحابي للمستخدم. النسخ الاحتياطي الوحيد
+          المقصود هو التصدير اليدوي (JSON/تيليجرام). لا حاجة لملفات
+          data_extraction_rules/network_security_config: أندرويد الحديث يمنع
+          حركة HTTP الصريحة افتراضياً، وهذا بالضبط المطلوب (تيليجرام HTTPS فقط).
+        -->
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Anira">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

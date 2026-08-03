@@ -1,0 +1,36 @@
+name: Android Build
+
+# يعمل على أي رفع لأي فرع (بلا تقييد اسم main/master)، وأيضاً يدوياً من تبويب
+# Actions بالمستودع (workflow_dispatch) لو حبيت تشغّله بدون رفع جديد.
+on:
+  push: {}
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      # نستخدم Gradle مباشرة من هذا الإجراء (بدون الحاجة لملف gradlew/wrapper jar
+      # مرفوع بالمستودع) — هذا الإجراء يهيّئ Gradle الصحيح تلقائياً ويخزّن
+      # الاعتماديات مؤقتاً (cache) بين التشغيلات لتسريع البناء التالي.
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build debug APK
+        run: gradle assembleDebug --no-daemon --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: anira-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      ثيم النظام قبل تحميل Compose فقط (خلفية النافذة/شريط الحالة اللحظي).
+      التصميم الفعلي بالكامل (الألوان، الوضع الليلي، الخطوط) يُطبَّق داخل Kotlin
+      عبر MaterialTheme في Theme.kt — لا حاجة لمكتبة Material الكلاسيكية هنا.
+    -->
+    <style name="Theme.Anira" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#EEF2F5</item>
+        <item name="android:statusBarColor">#0F172A</item>
+    </style>
+</resources>
