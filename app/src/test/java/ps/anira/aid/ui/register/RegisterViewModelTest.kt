@@ -10,6 +10,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,12 +20,6 @@ import ps.anira.aid.data.AniraDatabase
 import ps.anira.aid.data.Repository
 import ps.anira.aid.ui.RelationOptions
 
-/**
- * يثبت فعلياً — لا بمجرد قراءة الكود — أن قفل الضغط المزدوج (نفس إصلاح باگ
- * "نفس البيانات مسجّلة أكثر من مرة" الذي اكتُشف بالويب من لقطة شاشة حقيقية)
- * يمنع نداءين متتاليين سريعين لـ save() من إنشاء سجلين، بالضبط بنفس المبدأ:
- * فحص متزامن (isSaving) قبل أي نقطة تعليق (suspend) أولى.
- */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
@@ -64,11 +59,10 @@ class RegisterViewModelTest {
     fun `نداءان متتاليان سريعان لـ save ينتجان سجلاً واحداً فقط لا اثنين`() = runTest {
         fillValidForm()
 
-        // محاكاة ضغطتين سريعتين متتاليتين على نفس زر الحفظ، قبل ما تخلص أول واحدة
         vm.save {}
-        vm.save {} // لازم تُتجاهل فوراً بسبب isSaving=true اللي انضبطت بشكل متزامن بالنداء الأول
+        vm.save {}
 
-        testDispatcher.scheduler.advanceUntilIdle() // خلّي كل الكوروتينات المعلَّقة تخلص
+        testDispatcher.scheduler.advanceUntilIdle()
 
         val all = db.recordDao().getAllIds()
         assertEquals("لازم سجل واحد بالضبط، مو اثنين", 1, all.size)
@@ -81,7 +75,8 @@ class RegisterViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertEquals(0, db.recordDao().getAllIds().size)
-        assert(vm.state.value.fieldError != null)
+        // تم استبدال الأمر القديم بالأمر القياسي لاختبارات أندرويد
+        assertNotNull("يجب أن تظهر رسالة خطأ عند نقص الحقول", vm.state.value.fieldError)
     }
 
     @Test
